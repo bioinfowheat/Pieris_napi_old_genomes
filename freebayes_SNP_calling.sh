@@ -44,8 +44,8 @@ freebayes -f /cerberus/projects/shared_napi_rapae/assemblies/Pieris_napi_fullAsm
 
 # or use parallel code
 #
-# freebayes_parallel_by_chromosome.sh chromosomes_2_25.bed
-
+# 
+../../../software/freebayes_parallel_by_chromosome.sh chromosomes_2_25.bed
 
 
 
