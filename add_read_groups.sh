@@ -83,18 +83,21 @@
 nano metadata_whole_others.tsv
 # here is my composite metadata file, perhaps not the best, but OK.
 
-Dal_01	54.8.sorted.bam	Illumina	1	123	HJ5WKCCXY		1	GACTTCT
-Dal_02	54.5.sorted.bam	Illumina	1	123	HJ5WKCCXY		1	ATGGAGA
-Got_01	41.6.sorted.bam	Illumina	1	123	HJ5WKCCXY		1	CGACCTG
-Sto_01	Pn18.sorted.bam	Illumina	1	123	AHWL3JCCXY	2	CCTTAAT
-Sto_02	Pn83.sorted.bam	Illumina	1	123	AHWL3JCCXY	2	TTCCGAG
-Sto_03	Pn22.sorted.bam	Illumina	1	123	AHWL3JCCXY	2	TGCGTCC
-Ska_01	Pn89.sorted.bam	Illumina	1	123	BHWLW3CCXY	4	CGACCTG
-Ska_02	Pn85.sorted.bam	Illumina	1	123	AHWL3JCCXY	2	AAGGTCT
-Ska_03	Pn06.sorted.bam	Illumina	1	123	AHWL3JCCXY	2	GGCATAG
-Ska_04	41.3.sorted.bam	Illumina	1	123	HJ5WKCCXY		1	GAATCTC
-Den_01	Pn09.sorted.bam	Illumina	1	123	AHWL3JCCXY	2	CTCCAGT
-Abo_01	Pn1900.sorted.bam	Illumina	1	123	AHWL3JCCXY	2	AGAGCGC
-Abo_02	47.6.sorted.bam	Illumina	1	123	HJ5WKCCXY		1	TCGCAGG
+Dal_01	Dalarna54.8.sorted.bam	Illumina	1	123	HJ5WKCCXY		1	GACTTCT
+Dal_02	Dalarna54.5.sorted.bam	Illumina	1	123	HJ5WKCCXY		1	ATGGAGA
+Got_01	Gotland41.6.sorted.bam	Illumina	1	123	HJ5WKCCXY		1	CGACCTG
+Sto_01	StockholmPn18.sorted.bam	Illumina	1	123	AHWL3JCCXY	2	CCTTAAT
+Sto_02	StockholmPn83.sorted.bam	Illumina	1	123	AHWL3JCCXY	2	TTCCGAG
+Sto_03	StockholmPn22.sorted.bam	Illumina	1	123	AHWL3JCCXY	2	TGCGTCC
+Ska_01	SkanePn89.sorted.bam	Illumina	1	123	BHWLW3CCXY	4	CGACCTG
+Ska_02	SkanePn85.sorted.bam	Illumina	1	123	AHWL3JCCXY	2	AAGGTCT
+Ska_03	SkanePn06.sorted.bam	Illumina	1	123	AHWL3JCCXY	2	GGCATAG
+Ska_04	Skane41.3.sorted.bam	Illumina	1	123	HJ5WKCCXY		1	GAATCTC
+Den_01	DenmarkPn09.sorted.bam	Illumina	1	123	AHWL3JCCXY	2	CTCCAGT
+Abo_01	AbiskoPn1900.sorted.bam	Illumina	1	123	AHWL3JCCXY	2	AGAGCGC
+Abo_02	Abisko47.6.sorted.bam	Illumina	1	123	HJ5WKCCXY		1	TCGCAGG
 
-./add_readgroups_freebayes.sh  # to add the read names to these files
+/cerberus/projects/chrwhe/software/add_readgroups_freebayes.sh metadata_whole_others.tsv # to add the read names to these files
+
+# or in parallel
+/cerberus/projects/chrwhe/software/add_readgroups_parallel_4_freebayes.sh metadata_whole_others.tsv # to add the read names to these files

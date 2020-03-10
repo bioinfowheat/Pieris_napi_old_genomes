@@ -40,7 +40,7 @@ bam_path=./
 META=$1
 while read LINE
 do
-    simpleID=$(echo "$LINE" | awk '{print $1}')
+    simpleID=$(echo "$LINE" | awk '{prinyt $1}')
     sampleID=$(echo "$LINE" | awk '{print $2}')
     instrument=$(echo "$LINE" | awk '{print $3}')
     seqnum=$(echo "$LINE" | awk '{print $4}')
