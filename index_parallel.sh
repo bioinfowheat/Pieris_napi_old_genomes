@@ -5,7 +5,4 @@
 samtools index Abisko*.sorted.rg.bam
 
 # and for parallel, excluding Abisko which were run already
-ls *rg.bam | grep -v 'Abisko' | parallel --dryrun "samtools index {}"
-
-
-	
+ls *rg.bam | grep -v 'Abisko' | parallel "samtools index {}"

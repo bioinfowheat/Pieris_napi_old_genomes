@@ -3,9 +3,6 @@
 cd /cerberus/projects/chrwhe/Pieris_napi_old_demography/bams
 
 
-# paths that need to be defined for running bcftools and freebayes
-export PATH=$PATH:/data/programs/bcftools-1.3.1:/data/programs/freebayes/bin/
-
 
 # make a file with the lengths of the chromosomes to call VCF for
 # here I only chose chromosomes 2 through 20.
@@ -35,31 +32,20 @@ Chromosome_23 1 6692213
 Chromosome_24 1 5861113
 Chromosome_25 1 4833285
 
-VCF=
-VCF_root=$(echo $VCF | )
+# bam file list
+ls *.rg.bam > bam_file_list
 
-# remove SNPs within 3 bp of indel
-bcftools filter -g3 -O u $VCF > abisko.freebayes.bcf
+# calling SNPs across 25 chromosomes
+# path to freebayes
+export PATH=$PATH:/data/programs/freebayes/bin/
+#
+# serial through all chromosomes on one core
+freebayes -f /cerberus/projects/shared_napi_rapae/assemblies/Pieris_napi_fullAsm_chomoOnly.fasta -t chromosomes_2_25.bed -L bam_file_list > all.freebayes_chr25.vcf
 
-# remove indels and keep biallelic SNPs with overall QUAL > 40
-bcftools view -O v -m 2 -M 2 --types snps -i 'QUAL>40' abisko.freebayes.bcf >abisko.freebayes.SNPs.vcf
+# or use parallel code
+#
+# freebayes_parallel_by_chromosome.sh chromosomes_2_25.bed
 
-# set genotypes to missing based on depth, and a maximum missing treshold 5%
-vcftools --vcf abisko.freebayes.SNPs.vcf --minDP 4 --maxDP 80 --max-missing 0.95 --recode --out abisko.freebayes.SNPs.filtered.final
-
-# final vcf file.
-abisko.freebayes.SNPs.filtered.final.recode.vcf
-
-
-# 20 chromosomes
-export PATH=$PATH:/data/programs/bcftools-1.3.1:/data/programs/freebayes/bin/
-freebayes -f /cerberus/projects/shared_napi_rapae/assemblies/Pieris_napi_fullAsm_chomoOnly.fasta -t chromosomes_2_20.bed AbiskoPn1900.sorted.rg.bam Abisko47.6.sorted.rg.bam > abisko.freebayes_chr20.vcf
-bcftools filter -g3 -O u abisko.freebayes_chr20.vcf > abisko.freebayes_chr20.bcf
-bcftools view -O v -m 2 -M 2 --types snps -i 'QUAL>40' abisko.freebayes_chr20.bcf >abisko.freebayes_chr20.SNPs.vcf
-vcftools --vcf abisko.freebayes_chr20.SNPs.vcf --minDP 4 --maxDP 80 --max-missing 0.95 --recode --out abisko.freebayes_chr20.SNPs.filtered.final
-
-# now the other samples
-cd /cerberus/projects/chrwhe/Pieris_napi_old_demography/bams
 
 
 

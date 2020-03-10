@@ -1,10 +1,12 @@
+#!/bin/bash
 #########
 # filer of freebayes vcf file
 # removes indels, filters on quality
 # based upon https://github.com/mattingsdal/Population-genomics/blob/master/05.SNPfilter.sh
 
+export PATH=$PATH:/data/programs/bcftools-1.3.1:
 
-VCF=test.vcf
+VCF=$1
 
 VCF_root=$(echo $VCF | awk '{gsub(".vcf","",$0); print;}')
 
