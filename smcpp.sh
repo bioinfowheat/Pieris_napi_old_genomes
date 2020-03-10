@@ -4,10 +4,6 @@
 ###################################################################################################
 ###################################################################################################
 
-
-VCF=
-
-
 # populations
 	# Dal_01	pop5
 	# Dal_02	pop5
@@ -32,9 +28,9 @@ VCF=
 	# pop6:Got_01
 
 
-########
-#
-########
+################################################
+# generate the input files for smc++
+################################################
 
 # VCF=/usit/abel/u1/mortema/vcf/freebayes.ALL.VAR.Q40.DP4_30_max_miss_5.recode.edit.annotated.names.SNPs.AA.vcf.gz
 # for pop_south in GF01 GF49 TV69 TV70;do
@@ -65,3 +61,21 @@ mkdir pop3
 for pop3 in Ska_01 Ska_02 Ska_03 Ska_04;do
 	for i in {2..25} ; do echo $i ; done | cat | parallel "smc++ vcf2smc -d $pop3 $pop3 $VCF pop2/$pop3.Chromosome_{}.smc.txt Chromosome_{} --mask $mask_file pop3:Ska_01,Ska_02,Ska_03,Ska_04"
 done
+
+
+
+################################################
+# run smc++
+################################################
+
+smc++ cv -o pop1 -t1 50 -tk 30000 -o pop1/ 2.9e-9 pop1/*.txt
+smc++ cv -o pop2 -t1 50 -tk 30000 -o pop2/ 2.9e-9 pop1/*.txt
+smc++ cv -o pop3 -t1 50 -tk 30000 -o pop3/ 2.9e-9 pop1/*.txt
+
+################################################
+# plot results
+################################################
+
+smc++ plot -g 0.5 pop1.pdf pop1/model.final.json
+smc++ plot -g 1 pop2.pdf pop2/model.final.json
+smc++ plot -g 1 pop3.pdf pop3/model.final.json

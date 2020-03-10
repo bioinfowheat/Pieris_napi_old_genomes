@@ -3,16 +3,21 @@
 # to mask out the regions of the genome where
 # the genome is N, there is repetitive content, and the read depth is low
 
+cd /cerberus/projects/chrwhe/Pieris_napi_old_demography/bams
+ls *bam
+Abisko47.6.sorted.bam    Dalarna54.5.sorted.bam  DenmarkPn09.sorted.bam  Skane41.3.sorted.bam  SkanePn85.sorted.bam  StockholmPn18.sorted.bam  StockholmPn83.sorted.bam
+AbiskoPn1900.sorted.bam  Dalarna54.8.sorted.bam  Gotland41.6.sorted.bam  SkanePn06.sorted.bam  SkanePn89.sorted.bam  StockholmPn22.sorted.bam
+
 # get the depths for all the bam files
-parallel "bedtools genomecov -ibam {} -bg  > {.}.bed" ::: Abisko*sorted.bam
+parallel "bedtools genomecov -ibam {} -bg  > {.}.bed" ::: *.sorted.bam
 
 # filter these for having depth > 3
 parallel "awk '$4 > 3' {} > {.}.gt3.bed" ::: *.bed
 
-# combine all
+# combine all, then sort
 cat *.gt3.bed | sort -k1,1 -k2,2n > all.sorted_gt3.bed
 
-# need file of chromosome sizes
+# need file of chromosome sizes for bedtools compliment call below
 more chromo_sizes.tsv
 Chromosome_1    11357067
 Chromosome_2    15427984
