@@ -32,6 +32,9 @@ VCF=
 	# pop6:Got_01
 
 
+########
+#
+########
 
 # VCF=/usit/abel/u1/mortema/vcf/freebayes.ALL.VAR.Q40.DP4_30_max_miss_5.recode.edit.annotated.names.SNPs.AA.vcf.gz
 # for pop_south in GF01 GF49 TV69 TV70;do
