@@ -1,73 +1,10 @@
-freebayes SNP calling
+# add read groups to the bam files, as freebayes needs this information for
+# calling the SNPs.
 
-cd /cerberus/projects/chrwhe/Pieris_napi_old_demography/bams
-
-# make metadata file
-Abisko_01 AbiskoPn1900.sorted.bam Illumina 1 206 HJ5WKCCXY 7 TCCGGAGA+GTCAGTAC
-Abisko_02 Abisko47.6.sorted.bam  Illumina 1 1 BHJ7J7DSXX 2 ATTACTCG-TATAGCCT
-
-nano metadata_whole.tsv
-
-./add_readgroups_freebayes.sh  # to add the read names to these files
-
-# index
-samtools index Abisko*.sorted.rg.bam
-
-# the run freebayes
-export PATH=$PATH:/data/programs/bcftools-1.3.1:/data/programs/freebayes/bin/
-
-# freebayes -f /cerberus/projects/shared_napi_rapae/assemblies/Pieris_napi_fullAsm_chomoOnly.fasta AbiskoPn1900.sorted.bam Abisko47.6.sorted.bam > abisko.freebayes.vcf
-
--r Chromosome_2
--t chromosomes_2_10.bed
-
-nano chromosomes_2_10.bed
-Chromosome_2 1 15427984
-Chromosome_3 1 15357576
-Chromosome_4 1 14845049
-Chromosome_5 1 14436900
-Chromosome_6 1 13738639
-Chromosome_7 1 14186557
-Chromosome_8 1 14068971
-Chromosome_9 1 13996725
-Chromosome_10 1 13801688
-Chromosome_11 1 13587546
-Chromosome_12 1 12815933
-Chromosome_13 1 12634055
-Chromosome_14 1 12597868
-Chromosome_15 1 12489475
-Chromosome_16 1 11837383
-Chromosome_17 1 11817185
-Chromosome_18 1 11702215
-Chromosome_19 1 10907953
-Chromosome_20 1 10776756
-
-# test run on only chromo 2
-freebayes -f /cerberus/projects/shared_napi_rapae/assemblies/Pieris_napi_fullAsm_chomoOnly.fasta -t chromosomes_2.bed AbiskoPn1900.sorted.rg.bam Abisko47.6.sorted.rg.bam > abisko.freebayes.vcf
-
-
-# remove SNPs within 3 bp of indel
-bcftools filter -g3 -O u abisko.freebayes.vcf > abisko.freebayes.bcf
-
-# remove indels and keep biallelic SNPs with overall QUAL > 40
-bcftools view -O v -m 2 -M 2 --types snps -i 'QUAL>40' abisko.freebayes.bcf >abisko.freebayes.SNPs.vcf
-
-# set genotypes to missing based on depth, and a maximum missing treshold 5%
-vcftools --vcf abisko.freebayes.SNPs.vcf --minDP 4 --maxDP 80 --max-missing 0.95 --recode --out abisko.freebayes.SNPs.filtered.final
-
-# final vcf file.
-abisko.freebayes.SNPs.filtered.final.recode.vcf
-
-
-# 20 chromosomes
-export PATH=$PATH:/data/programs/bcftools-1.3.1:/data/programs/freebayes/bin/
-freebayes -f /cerberus/projects/shared_napi_rapae/assemblies/Pieris_napi_fullAsm_chomoOnly.fasta -t chromosomes_2_20.bed AbiskoPn1900.sorted.rg.bam Abisko47.6.sorted.rg.bam > abisko.freebayes_chr20.vcf
-bcftools filter -g3 -O u abisko.freebayes_chr20.vcf > abisko.freebayes_chr20.bcf
-bcftools view -O v -m 2 -M 2 --types snps -i 'QUAL>40' abisko.freebayes_chr20.bcf >abisko.freebayes_chr20.SNPs.vcf
-vcftools --vcf abisko.freebayes_chr20.SNPs.vcf --minDP 4 --maxDP 80 --max-missing 0.95 --recode --out abisko.freebayes_chr20.SNPs.filtered.final
-
-# now the other samples
-cd /cerberus/projects/chrwhe/Pieris_napi_old_demography/bams
+# importantly, if you have more than one sequencing dataset / individual
+# these would be each mapped against the same reference, but exist as
+# two different bam files, so that their read particularities could be
+# accurately modeled by freebayes
 
 # make metadata file
 # 1 simple_ID
@@ -78,8 +15,7 @@ cd /cerberus/projects/chrwhe/Pieris_napi_old_demography/bams
 # 6 flow cell
 # 7 lane
 # 8 barcode
-Abisko_01 AbiskoPn1900.sorted.bam Illumina 1 206 HJ5WKCCXY 7 TCCGGAGA+GTCAGTAC
-Abisko_02 Abisko47.6.sorted.bam  Illumina 1 1 BHJ7J7DSXX 2 ATTACTCG-TATAGCCT
+
 
 # revised metadata on samples
 short_name	bam_filename	population	Region	sample_year	Instrument	seq_number	run_number	flow_cell	lane	barcode
@@ -132,7 +68,3 @@ Abo_01	Pn1900.sorted.bam	Illumina	1	123	AHWL3JCCXY	2	AGAGCGC
 Abo_02	47.6.sorted.bam	Illumina	1	123	HJ5WKCCXY		1	TCGCAGG
 
 ./add_readgroups_freebayes.sh  # to add the read names to these files
-
-
-
-#
