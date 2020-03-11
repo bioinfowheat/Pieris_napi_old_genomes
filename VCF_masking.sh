@@ -47,8 +47,12 @@ Chromosome_24   5861113
 Chromosome_25   4833285
 
 # merge
-bedtools merge -i all.sorted_gt3.bed | bedtools complement -i - -g chromo_sizes.tsv > all.sorted_gt3.merged.readdepth_lt_4.bed
+bedtools merge -i all.sorted_gt3.bed > all.sorted_gt3.merged.bed
 
+sort -k1,1 -k2,2n all.sorted_gt3.merged.bed > all.sorted_gt3.merged.sorted.bed
+sort -k1,1 chromo_sizes.tsv > chromo_sizes.sorted.tsv
+bedtools complement -i all.sorted_gt3.merged.sorted.bed -g chromo_sizes.sorted.tsv > all.sorted_gt3.merged.sorted.readdepth_lt_4.bed
+# gives error on mitochondria, which is fine as we only want the chromosomes
 
 # make mask of the N regions of the genome
 # https://www.danielecook.com/generate-a-bedfile-of-masked-ranges-a-fasta-file/
@@ -62,14 +66,14 @@ genome_Ns=/cerberus/projects/chrwhe/Pieris_napi_old_demography/Pieris_napi_fullA
 genome_repeats=/cerberus/projects/chrwhe/Pieris_napi_old_demography/repeatmasker.gff.bed.gz
 
 # combine
-zcat $genome_repeats | cut -f1,2,3 | cat - $genome_Ns all.sorted_gt3.merged.readdepth_lt_4.bed | \
+zcat $genome_repeats | cut -f1,2,3 | cat - $genome_Ns all.sorted_gt3.merged.sorted.readdepth_lt_4.bed | \
 sort -k1,1 -k2,2n | \
 # merge all these overlapping beds
-cut -f1,2,3 | bedtools merge > all.sorted_gt3.merged.readdepth_lt_4.N_repeat.merged.bed
+cut -f1,2,3 | bedtools merge > all.sorted_gt3.merged.sorted.readdepth_lt_4.N_repeat.merged.bed
 
 # compress and index
-bgzip all.sorted_gt3.merged.readdepth_lt_4.N_repeat.merged.bed
-tabix all.sorted_gt3.merged.readdepth_lt_4.N_repeat.merged.bed.gz
+bgzip all.sorted_gt3.merged.sorted.readdepth_lt_4.N_repeat.merged.bed
+tabix all.sorted_gt3.merged.sorted.readdepth_lt_4.N_repeat.merged.bed.gz
 
 
 
