@@ -16,11 +16,11 @@
 	# Ska_03	pop3
 	# Ska_04	pop3
 	# Den_01	pop2
-	# Abo_01	pop1
-	# Abo_02	pop1
+	# Abisko_01	pop1
+	# Abisko_02	pop1
 
 # populations reformatted
-	# pop1:Abo_01,Abo_02
+	# pop1:Abisko_01,Abisko_02
 	# pop2:Den_01
 	# pop3:Ska_01,Ska_02,Ska_03,Ska_04
 	# pop4:Sto_01,Sto_02,Sto_03
@@ -40,26 +40,35 @@
 # done
 
 # this is set up for chromosomes 2 to 25
+# these are all separate now
+# all.freebayes.Chromosome_16.SNPs.filtered.final.recode.vcf
+# all.freebayes.Chromosome_22.SNPs.filtered.final.recode.vcf
 
-VCF=
-mask_file=all.sorted_gt3.merged.readdepth_lt_4.N_repeat.merged.bed.gz
+mask_file=all.sorted_gt3.merged.sorted.readdepth_lt_4.N_repeat.merged.bed.gz
 
 # pop1
 mkdir pop1
-for pop1 in Abo_01 Abo_02;do
-	for i in {2..25} ; do echo $i ; done | cat | parallel "smc++ vcf2smc -d $pop1 $pop1 $VCF pop1/$pop1.Chromosome_{}.smc.txt Chromosome_{} --mask $mask_file pop1:Abo_01,Abo_02"
+for pop1 in Abisko_01 Abisko_02;do
+	for i in {2..25} ; do echo $i ; done | cat | parallel "smc++ vcf2smc -d $pop1 $pop1 all.freebayes.Chromosome_{}.SNPs.filtered.final.recode.vcf.gz pop1/$pop1.Chromosome_{}.smc.txt Chromosome_{} --mask $mask_file pop1:Abisko_01,Abisko_02"
 done
+
 
 # pop2
 mkdir pop2
 for pop2 in Den_01;do
-	for i in {2..25} ; do echo $i ; done | cat | parallel "smc++ vcf2smc -d $pop2 $pop2 $VCF pop2/$pop2.Chromosome_{}.smc.txt Chromosome_{} --mask $mask_file pop2:Den_01"
+	for i in {2..25} ; do echo $i ; done | cat | parallel "smc++ vcf2smc -d $pop2 $pop2 all.freebayes.Chromosome_{}.SNPs.filtered.final.recode.vcf.gz pop2/$pop2.Chromosome_{}.smc.txt Chromosome_{} --mask $mask_file pop2:Den_01"
 done
 
 # pop3
 mkdir pop3
 for pop3 in Ska_01 Ska_02 Ska_03 Ska_04;do
-	for i in {2..25} ; do echo $i ; done | cat | parallel "smc++ vcf2smc -d $pop3 $pop3 $VCF pop2/$pop3.Chromosome_{}.smc.txt Chromosome_{} --mask $mask_file pop3:Ska_01,Ska_02,Ska_03,Ska_04"
+	for i in {2..25} ; do echo $i ; done | cat | parallel "smc++ vcf2smc -d $pop3 $pop3 all.freebayes.Chromosome_{}.SNPs.filtered.final.recode.vcf.gz pop3/$pop3.Chromosome_{}.smc.txt Chromosome_{} --mask $mask_file pop3:Ska_01,Ska_02,Ska_03,Ska_04"
+done
+
+# pop4
+mkdir pop4
+for pop4 in Sto_01 Sto_02 Sto_03;do
+	for i in {2..25} ; do echo $i ; done | cat | parallel "smc++ vcf2smc -d $pop4 $pop4 all.freebayes.Chromosome_{}.SNPs.filtered.final.recode.vcf.gz pop4/$pop4.Chromosome_{}.smc.txt Chromosome_{} --mask $mask_file pop4:Sto_01,Sto_02,Sto_03"
 done
 
 
@@ -68,9 +77,10 @@ done
 # run smc++
 ################################################
 
-smc++ cv -o pop1 -t1 50 -tk 30000 -o pop1/ 2.9e-9 pop1/*.txt
-smc++ cv -o pop2 -t1 50 -tk 30000 -o pop2/ 2.9e-9 pop1/*.txt
-smc++ cv -o pop3 -t1 50 -tk 30000 -o pop3/ 2.9e-9 pop1/*.txt
+smc++ cv -o pop1 --timepoints 5000 300000 -o pop1/ 2.9e-9 pop1/*.txt
+smc++ cv -o pop2 --timepoints 5000 300000 -o pop2/ 2.9e-9 pop1/*.txt
+smc++ cv -o pop3 --timepoints 5000 300000 -o pop3/ 2.9e-9 pop1/*.txt
+smc++ cv -o pop4 --timepoints 5000 300000 -o pop4/ 2.9e-9 pop1/*.txt
 
 ################################################
 # plot results
@@ -79,3 +89,12 @@ smc++ cv -o pop3 -t1 50 -tk 30000 -o pop3/ 2.9e-9 pop1/*.txt
 smc++ plot -g 0.5 pop1.pdf pop1/model.final.json
 smc++ plot -g 1 pop2.pdf pop2/model.final.json
 smc++ plot -g 1 pop3.pdf pop3/model.final.json
+smc++ plot -g 1 pop4.pdf pop4/model.final.json
+
+################################################
+# email when done
+################################################
+
+email=chris.wheat@zoologi.su.se
+location=$(pwd)
+echo -e "at \n\n$location"| mutt -s "your script is finished" -- "$email"
