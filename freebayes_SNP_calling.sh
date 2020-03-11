@@ -43,9 +43,10 @@ export PATH=$PATH:/data/programs/freebayes/bin/
 freebayes -f /cerberus/projects/shared_napi_rapae/assemblies/Pieris_napi_fullAsm_chomoOnly.fasta -t chromosomes_2_25.bed -L bam_file_list > all.freebayes_chr25.vcf
 
 # or use parallel code
-#
-# 
-../../../software/freebayes_parallel_by_chromosome.sh chromosomes_2_25.bed
+# getting list of the scaffolds to use
+cut -f1 -d ' ' chromosomes_2_25.bed > chromosome_list_2_25
+# and then run this script, which has the bam file list, and uses the P. napi genome
+../../../software/freebayes_parallel_by_chromosome.sh chromosome_list_2_25
 
 
 
