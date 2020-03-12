@@ -70,29 +70,3 @@ mkdir pop4
 for pop4 in Sto_01 Sto_02 Sto_03;do
 	for i in {2..25} ; do echo $i ; done | cat | parallel "smc++ vcf2smc -d $pop4 $pop4 all.freebayes.Chromosome_{}.SNPs.filtered.final.recode.vcf.gz pop4/$pop4.Chromosome_{}.smc.txt Chromosome_{} --mask $mask_file pop4:Sto_01,Sto_02,Sto_03"
 done
-
-
-
-################################################
-# run smc++
-################################################
-
-for i in {1..4} ; do echo $i ; done | cat | parallel -j 3 "smc++ cv -o pop{} --timepoints 5000 300000 -o pop{}/ 2.9e-9 pop{}/*.txt"
-
-################################################
-# plot results
-################################################
-
-# for g 0.5 plot
-smc++ plot -g 0.5 pop1_g0.5.pdf pop1/model.final.json
-
-# for g 1 plots
-for i in {1..4} ; do echo $i ; done | cat | parallel -j 3 "smc++ plot -g 1 pop{}.pdf pop{}/model.final.json"
-
-################################################
-# email when done
-################################################
-
-email=chris.wheat@zoologi.su.se
-location=$(pwd)
-echo -e "at \n\n$location"| mutt -s "your script is finished" -- "$email"
