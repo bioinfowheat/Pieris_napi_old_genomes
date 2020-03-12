@@ -77,19 +77,17 @@ done
 # run smc++
 ################################################
 
-smc++ cv -o pop1 --timepoints 5000 300000 -o pop1/ 2.9e-9 pop1/*.txt
-smc++ cv -o pop2 --timepoints 5000 300000 -o pop2/ 2.9e-9 pop1/*.txt
-smc++ cv -o pop3 --timepoints 5000 300000 -o pop3/ 2.9e-9 pop1/*.txt
-smc++ cv -o pop4 --timepoints 5000 300000 -o pop4/ 2.9e-9 pop1/*.txt
+for i in {1..4} ; do echo $i ; done | cat | parallel -j 3 "smc++ cv -o pop{} --timepoints 5000 300000 -o pop{}/ 2.9e-9 pop{}/*.txt"
 
 ################################################
 # plot results
 ################################################
 
-smc++ plot -g 0.5 pop1.pdf pop1/model.final.json
-smc++ plot -g 1 pop2.pdf pop2/model.final.json
-smc++ plot -g 1 pop3.pdf pop3/model.final.json
-smc++ plot -g 1 pop4.pdf pop4/model.final.json
+# for g 0.5 plot
+smc++ plot -g 0.5 pop1_g0.5.pdf pop1/model.final.json
+
+# for g 1 plots
+for i in {1..4} ; do echo $i ; done | cat | parallel -j 3 "smc++ plot -g 1 pop{}.pdf pop{}/model.final.json"
 
 ################################################
 # email when done
