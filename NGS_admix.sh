@@ -43,6 +43,7 @@ $ANGSD -bam all.files -GL 2 -doMajorMinor 1 -doMaf 1 -SNP_pval 2e-6 -minMapQ 30 
 	   ->"all_mds_depth_filter.ibs.gz"
 	   ->"all_mds_depth_filter.ibsMat"
 	   ->"all_mds_depth_filter.covMat"
+	   # I think this also generated the beagle formated file for NGSadmix below
 
 # NGS admix run for all the different k numbers of populations
 for i in {1..6} ; do echo $i ; done | cat | parallel -j 6 "$NGSadmix -likes all_mds_depth_filter_ngsadmix.beagle.gz -K {} -minMaf 0.05 -seed 1 -o all_mds_depth_filter_ngsadmix.{}_pops"
