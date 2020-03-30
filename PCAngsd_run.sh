@@ -13,7 +13,7 @@ python $pcangsd_path/pcangsd.py -beagle all_mds_depth_filter_ngsadmix.beagle.gz 
 # Number of sites after MAF filtering (0.05): 729816
 
 
-python $pcangsd_path/pcangsd.py -beagle all_mds_depth_filter_ngsadmix.beagle.gz -inbreed 1 -o inbreed_1 -threads 30
+# python $pcangsd_path/pcangsd.py -beagle all_mds_depth_filter_ngsadmix.beagle.gz -inbreed 1 -o inbreed_1 -threads 30
 # Estimating per-individual inbreeding coefficients
 # Using Simple model
 # Inbreeding coefficients estimated (1). RMSE=0.12574231007
@@ -22,6 +22,8 @@ python $pcangsd_path/pcangsd.py -beagle all_mds_depth_filter_ngsadmix.beagle.gz 
 # Inbreeding coefficients estimated (4). RMSE=4.29472172655e-05
 # EM (Inbreeding - individuals) converged at iteration: 4
 # Saved per-individual inbreeding coefficients as inbreed_1.inbreed.npy (Binary)
+
+# inbreed 2 gives back an estimation that scales from 0 to 1, while inbreed 1 scales from -1 to 1, due to different methods.
 python $pcangsd_path/pcangsd.py -beagle all_mds_depth_filter_ngsadmix.beagle.gz -inbreed 2 -o inbreed_2 -threads 30
 
 
