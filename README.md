@@ -10,3 +10,4 @@ I include all of the bioinformatic steps to go from bam files to demographic ana
   6. The SMC++ input files were then generated, using this mask, for each population in a composite likelihood framework
   7. SMC++ was then run for demographic inference
   8. Plots were then made, for all of the populations with 2 generations per year (pop2-6) and one generation per year (pop1) separately
+  9. try it all out
